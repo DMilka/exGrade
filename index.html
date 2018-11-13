@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <title>exGrade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Lato|Pacifico" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+  <header class="title">
+    <h1 class="title__main">ExGrade</h1>
+  </header>
+  <main>
+    <section class="main hidden">
+      <div class="container__navigation">
+
+        <button class="container__navigation--btn">+</button>
+      </div>
+      <div class="container__list">
+        <div class="container__listItem">
+          <div class="container__listItem--name">Semestr 1</div>
+          <button class="container__listItem--btn">x</button>
+        </div>
+
+        <div class="container__listItem">
+          <div class="container__listItem--name">Semestr 2</div>
+          <button class="container__listItem--btn">x</button>
+        </div>
+        <div class="container__listItem">
+          <div class="container__listItem--name">Semestr 3</div>
+          <button class="container__listItem--btn">x</button>
+        </div>
+      </div>
+    </section>
+    <section class="semester">
+      <div class="container__navigation semester_nav">
+        <div class="flexContainer">
+            <h2 class="semester-name">Semestr 1</h2>
+
+        </div>
+        <nav class="semester__nav">
+            <ol class="semester__navigation">
+              <li class="active">Przedmioty</li>
+              <li>Plan zajęć</li>
+            </ol>
+          </nav>
+      </div>
+      <button class="container__navigation--btn back"><-</button>
+      <button class="container__navigation--btn moved-button">+</button>
+     <div class="container__list semester__list">
+       <div class="container__listItem">
+          <div class="container__listItem--name">Biologia</div>
+          <button class="container__listItem--btn">x</button>
+        </div>
+
+       <div class="container__listItem">
+          <div class="container__listItem--name">Matematyka</div>
+          <button class="container__listItem--btn">x</button>
+        </div>
+        <div class="container__listItem">
+          <div class="container__listItem--name">J. polski</div>
+          <button class="container__listItem--btn">x</button>
+        </div>
+      </div>
+   </section>
+    <section class="subject hidden">
+        <div class="container__navigation semester_nav">
+            <div class="flexContainer">-               
+ <h2 class="semester-name">Semestr 1</h2>
+
+            </div>
+            <nav class="semester__nav">
+                <ol class="semester__navigation">
+                  <li class="active">Przedmioty</li>
+                  <li>Plan zajęć</li>
+                </ol>
+              </nav>
+          </div>
+          <button class="container__navigation--btn moved-button">+</button>
+          <div class="container__list semester__list">
+            <div class="container__listItem">
+              <div class="container__listItem--name subject">Kartkówka</div>
+              <div class="container__listItem--grade">4.5</div>
+              <button class="container__listItem--btn">x</button>
+            </div>
+
+            <div class="container__listItem">
+              <div class="container__listItem--name subject">Sprawdzian</div>
+              <div class="container__listItem--grade">4.0</div>
+              <button class="container__listItem--btn">x</button>
+            </div>
+            <div class="container__listItem">
+              <div class="container__listItem--name subject">Odp. ustna</div>
+              <div class="container__listItem--grade">3.0</div>
+              <button class="container__listItem--btn">x</button>
+            </div>
+          </div>
+    </section>
+    <section class="schedule hidden">
+
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+
+</html>

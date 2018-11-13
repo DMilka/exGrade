@@ -1,0 +1,180 @@
+body {
+  font-size: 62.5%;
+ background-image: url(background.jpg);
+}
+
+.title {
+  width: 1000px;
+ margin: 0 auto;
+  height: 220px;
+  padding-top: 30px;
+  text-align: center;
+  font-size: 2rem;
+  font-family: 'Pacifico', cursive;
+  color: #231F20;
+}
+main {
+  width: 1000px;
+  min-height: 500px;
+  background-color: #FAF0CA;
+  position: absolute;
+  margin: 0 calc(50vw - 500px);
+  display: block;
+  font-family: 'Lato', sans-serif;
+  border-radius: 10px;
+}
+
+.container__navigation {
+  position: absolute;
+  width: 80%;
+  height: 70px;
+  right: 10%;
+  top: 20px;
+  border-bottom: 2px solid #231F20;
+}
+
+.container__navigation--btn {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  right: 10px;
+  top: 10px;
+  border: 1px solid #231F20;
+  background-color: #C5A48A;
+  border-radius: 10px;
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  font-size: 1.5rem;
+  text-align: center;
+  color: #231F20;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: 0;
+}
+
+.container__navigation--btn:hover {
+  transform: translateY(3px);
+}
+.container__list {
+  width: 800px;
+  min-height: 300px;
+  margin: 120px auto;
+}
+
+.container__listItem {
+  width: 400px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #231F20;
+  margin: 0 auto;
+
+}
+
+.container__listItem:nth-child(even) {
+  background-color: #C5A48A;
+}
+
+.container__listItem--btn {
+  width: 25px;
+  min-width: 25px;
+  height: 25px;
+  min-height: 25px;
+  border-radius: 50%;
+  margin: 20px;
+  border: 1px solid #231F20;
+  background: none;
+  display: none;
+  transition: all 0.2s;
+  outline: 0;
+}
+
+.container__listItem--btn:hover {
+  transform: translateY(2px);
+  cursor: pointer;
+}
+
+.container__listItem--name {
+  width: 330px;
+  height: 30px;
+  font-size: 1.8rem;
+  padding-left: 140px;
+  color: #231F20;
+  transition: all 0.6s;
+}
+
+.container__listItem:first-child {
+  border-top: 2px solid #231F20;
+}
+
+.container__listItem:hover .container__listItem--name {
+ padding-left: 30px;
+}
+
+.container__listItem:hover .container__listItem--btn {
+  display: block;
+}
+.hidden {
+  display: none;
+}
+
+.semester_nav {
+  display: flex;
+  flex-direction: column;  
+height: 150px;
+}
+
+.semester-name {
+  font-size: 3rem;
+ padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.semester__navigation {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin-top: 30px;
+}
+
+.semester__navigation li {
+  width: 140px;
+  height: 30px;
+  text-align: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.semester__list {
+  margin: 200px auto;
+}
+
+.active {
+  border-bottom: 2px solid #231F20;
+}
+
+.semester {
+  color: #231F20;
+}
+
+.moved-button {
+  top: 210px;
+  right: 70px;
+}
+
+.back {
+  top: 30px;
+  left: 70px;
+}
+
+.container__listItem--grade {
+  width: 40px;
+  font-size: 1.2rem;
+}
+
+.subject {
+  padding: 20px;
+}
