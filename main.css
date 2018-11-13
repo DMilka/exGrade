@@ -121,7 +121,7 @@ main {
 
 .semester_nav {
   display: flex;
-  flex-direction: column;  
+  flex-direction: column;
 height: 150px;
 }
 
@@ -177,4 +177,71 @@ height: 150px;
 
 .subject {
   padding: 20px;
+}
+
+.form_semester {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.8);
+}
+
+.form_semester__box {
+  width: 500px;
+  height: 200px;
+  margin: calc(50vh - 250px) calc(50vw - 250px);
+  background-color: #FAF0CA;
+  position: absolute;
+}
+
+.semester_input {
+  width: 200px;
+  height: 30px;
+  margin: 50px 150px;
+  font-size: 1.4rem;
+  font-family: 'Lato', sans-serif;
+  color: #231F20;
+  border: 0;
+  background: 0;
+  outline: 0;
+  border-bottom: 2px solid #231F20;
+
+}
+
+.add_button {
+  width: 100px;
+  height: 35px;
+  font-size: 1.4rem;
+  margin: 0 200px;
+  border: 1px solid #231F20;
+  border-radius: 5px;
+  background: #C5A48A;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: 0;
+}
+
+.add_button:hover {
+  transform: translateY(3px);
+}
+
+.close_button {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  background: #C5A48A;
+  color: #231F20;
+  border: 1px solid #231F20;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: 0;
+}
+
+.close_button:hover {
+  transform: translateY(3px);
 }

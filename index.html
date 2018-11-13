@@ -15,10 +15,10 @@
     <h1 class="title__main">ExGrade</h1>
   </header>
   <main>
-    <section class="main hidden">
+    <section class="main">
       <div class="container__navigation">
 
-        <button class="container__navigation--btn">+</button>
+        <button class="container__navigation--btn" id="addSemester">+</button>
       </div>
       <div class="container__list">
         <div class="container__listItem">
@@ -36,7 +36,7 @@
         </div>
       </div>
     </section>
-    <section class="semester">
+    <section class="semester hidden">
       <div class="container__navigation semester_nav">
         <div class="flexContainer">
             <h2 class="semester-name">Semestr 1</h2>
@@ -69,7 +69,7 @@
    </section>
     <section class="subject hidden">
         <div class="container__navigation semester_nav">
-            <div class="flexContainer">-               
+            <div class="flexContainer">-
  <h2 class="semester-name">Semestr 1</h2>
 
             </div>
@@ -103,7 +103,17 @@
     <section class="schedule hidden">
 
     </section>
+
+
   </main>
+  <section class="form_semester hidden">
+    <div class="form_semester__box">
+        <input type="text" name="semester_name" id="semester_name" class="semester_input" placeholder="Semester name">
+        <button class="add_button">Dodaj</button>
+        <button class="close_button">x</button>
+    </div>
+
+  </section>
   <script src="app.js"></script>
 </body>
 
