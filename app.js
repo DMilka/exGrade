@@ -19,16 +19,30 @@ const gradeController = (function() {
       let newSemester, newSemesterID;
 
       if(data.semesters.length > 0) {
-        newSemesterID =  data.semesters[data.semesters.length - 1].id + 1; 
+        newSemesterID =  data.semesters[data.semesters.length - 1].id + 1;
       } else {
         newSemesterID = 0;
       }
 
       newSemester = new Semester(newSemesterID, name);
-      
+
       data.semesters.push(newSemester);
 
       return newSemester;
+    },
+
+    deleteSemester: function(id) {
+      let indx, copyOfDataArr;
+
+      copyOfDataArr = data.semesters.map(function(current) {
+        return current.id;
+      });
+
+      indx = copyOfDataArr.indexOf(id);
+
+      if (indx !== -1) {
+          data.semesters.splice(indx, 1);
+      }
     },
 
     test: function() {
@@ -53,7 +67,7 @@ const UIController = (function() {
     semesterDeleteBtn: '#semester_delete'
   }
 
-  
+
 
   return {
     getDOMstrings: function() {
@@ -75,6 +89,11 @@ const UIController = (function() {
       htmlContainer = DOMstrings.semesterList;
 
       document.querySelector(htmlContainer).insertAdjacentHTML('beforeend', newHtml);
+    },
+
+    deleteSemesterFromUI: function(element) {
+      let el = document.getElementById(element);
+      el.parentNode.removeChild(el);
     }
 
 
@@ -99,10 +118,7 @@ const controller = (function(gradeCtrl, UICtrl) {
       document.querySelector(DOM.FormSemester).classList.add('hidden');
     });
 
-    document.querySelector(DOM.semesterDeleteBtn).addEventListener('click', function() {
-      // deleteSemester();
-      console.log('test');
-    });
+    document.querySelector(DOM.semesterList).addEventListener('click', deleteSemester);
 
   };
 
@@ -111,19 +127,32 @@ const controller = (function(gradeCtrl, UICtrl) {
 
     // 1. Pobranie całego inputa wraz z zawartością
     input = UICtrl.getSemesterAddInput();
-    
+
     // 2. Dodanie do struktury danych nowego przedmiotu
     if (input.name !== "") {
       newSemester = gradeCtrl.addSemester(input.name);
     }
 
     // 3. Usunięcie zawartości w inpucie
-    
+
     // 4. Dodanie zawartości w widoku
     UICtrl.addSemesterToList(newSemester);
   };
 
-  let deleteSemester = function() {
+  let deleteSemester = function(e) {
+    let itemToDeleteID, dividedItem, dividedID;
+
+    itemToDeleteID = e.target.parentNode.id;
+    dividedItem = itemToDeleteID.split('-');
+    dividedID = parseInt(dividedItem[1]);
+
+    // 1. Usunięcie zawartości z gradeControllera
+    gradeCtrl.deleteSemester(dividedID);
+
+    // 2. Usunięcie zawartości z UI
+    UICtrl.deleteSemesterFromUI(itemToDeleteID);
+
+
   }
 
   return {
