@@ -83,7 +83,7 @@ const UIController = (function() {
     addSemesterToList: function(item) {
       let html, newHtml, htmlContainer;
 
-      html = '<div class="container__listItem" id="semester_id-%semesterID%"><div class="container__listItem--name">%semesterName%</div><button class="container__listItem--btn" id="semester_delete" >x</button></div>';
+      html = '<div class="container__listItem" id="semester_id-%semesterID%"><div class="container__listItem--name">%semesterName%</div><button class="container__listItem--btn" id="semester_delete" ><i class="ion-ios-close-outline"></i></button></div>';
       newHtml = html.replace('%semesterName%', item.name);
       newHtml = newHtml.replace('%semesterID%', item.id);
       htmlContainer = DOMstrings.semesterList;
@@ -104,21 +104,30 @@ const controller = (function(gradeCtrl, UICtrl) {
   let setupEventListeners = function() {
     let DOM = UICtrl.getDOMstrings();
 
+    // Otwieranie formularza z dodawaniem semestru
     document.querySelector(DOM.addSemesterBtn).addEventListener('click', function() {
-    document.querySelector(DOM.FormSemester).classList.remove('hidden');
-
+      document.querySelector(DOM.FormSemester).classList.remove('hidden');
     });
 
+    // Zamykanie formularza z dodawaniem semestru
     document.querySelector(DOM.closeSemesterForm).addEventListener('click', function() {
       document.querySelector(DOM.FormSemester).classList.add('hidden');
     });
 
+    // Zatwierdzenie formularza dodania semestru
     document.querySelector(DOM.confirmAddSemesterBtn).addEventListener('click', function() {
       addSemester();
       document.querySelector(DOM.FormSemester).classList.add('hidden');
     });
 
+    // Usuniecie semestru
     document.querySelector(DOM.semesterList).addEventListener('click', deleteSemester);
+
+    // Otwarcie okna z zawartoscia wybranego semestru
+    document.querySelector(DOM.semesterList).addEventListener('click', function(e) {
+      let item = e.target.parentNode;
+      console.log(item);
+    });
 
   };
 
@@ -142,15 +151,20 @@ const controller = (function(gradeCtrl, UICtrl) {
   let deleteSemester = function(e) {
     let itemToDeleteID, dividedItem, dividedID;
 
-    itemToDeleteID = e.target.parentNode.id;
+    itemToDeleteID = e.target.parentNode.parentNode.id;
     dividedItem = itemToDeleteID.split('-');
     dividedID = parseInt(dividedItem[1]);
 
-    // 1. Usunięcie zawartości z gradeControllera
-    gradeCtrl.deleteSemester(dividedID);
 
-    // 2. Usunięcie zawartości z UI
-    UICtrl.deleteSemesterFromUI(itemToDeleteID);
+    if(itemToDeleteID !== 'semester_list') {
+
+      // 1. Usunięcie zawartości z gradeControllera
+      gradeCtrl.deleteSemester(dividedID);
+
+      // 2. Usunięcie zawartości z UI
+      UICtrl.deleteSemesterFromUI(itemToDeleteID);
+    }
+
 
 
   }
