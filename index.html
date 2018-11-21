@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <title>exGrade</title>
+  <title>exGrade</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Lato|Pacifico" rel="stylesheet">
   <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
@@ -28,66 +28,58 @@
     <section class="semester hidden">
       <div class="container__navigation semester_nav">
         <div class="flexContainer">
-            <h2 class="semester-name">Semestr 1</h2>
+          <h2 class="semester-name" id="semester-name">Semestr 1</h2>
 
         </div>
         <nav class="semester__nav">
-            <ol class="semester__navigation">
-              <li class="active">Przedmioty</li>
-              <li>Plan zajęć</li>
-            </ol>
-          </nav>
+          <ol class="semester__navigation">
+            <li class="active">Przedmioty</li>
+            <li>Plan zajęć</li>
+          </ol>
+        </nav>
       </div>
-      <button class="container__navigation--btn back"><-</button>
+      <button class="container__navigation--btn back" id="semester-close-btn">
+        <-
+      </button>
+      <button class="container__navigation--btn moved-button" id="addSubject">
+          +
+      </button>
+      <div class="container__list semester__list" id="subjects-list">
+
+      </div>
+    </section>
+    <section class="subject hidden">
+      <div class="container__navigation semester_nav">
+        <div class="flexContainer">-
+          <h2 class="semester-name" id="subject-name">Semestr 1</h2>
+
+        </div>
+        <nav class="semester__nav">
+          <ol class="semester__navigation">
+            <li class="active">Przedmioty</li>
+            <li>Plan zajęć</li>
+          </ol>
+        </nav>
+      </div>
       <button class="container__navigation--btn moved-button">+</button>
-     <div class="container__list semester__list">
-       <div class="container__listItem">
-          <div class="container__listItem--name">Biologia</div>
-          <button class="container__listItem--btn" id="semester_delete">x</button>
+      <div class="container__list semester__list">
+        <div class="container__listItem">
+          <div class="container__listItem--name subject">Kartkówka</div>
+          <div class="container__listItem--grade">4.5</div>
+          <button class="container__listItem--btn">x</button>
         </div>
 
-       <div class="container__listItem">
-          <div class="container__listItem--name">Matematyka</div>
+        <div class="container__listItem">
+          <div class="container__listItem--name subject">Sprawdzian</div>
+          <div class="container__listItem--grade">4.0</div>
           <button class="container__listItem--btn">x</button>
         </div>
         <div class="container__listItem">
-          <div class="container__listItem--name">J. polski</div>
+          <div class="container__listItem--name subject">Odp. ustna</div>
+          <div class="container__listItem--grade">3.0</div>
           <button class="container__listItem--btn">x</button>
         </div>
       </div>
-   </section>
-    <section class="subject hidden">
-        <div class="container__navigation semester_nav">
-            <div class="flexContainer">-
- <h2 class="semester-name">Semestr 1</h2>
-
-            </div>
-            <nav class="semester__nav">
-                <ol class="semester__navigation">
-                  <li class="active">Przedmioty</li>
-                  <li>Plan zajęć</li>
-                </ol>
-              </nav>
-          </div>
-          <button class="container__navigation--btn moved-button">+</button>
-          <div class="container__list semester__list">
-            <div class="container__listItem">
-              <div class="container__listItem--name subject">Kartkówka</div>
-              <div class="container__listItem--grade">4.5</div>
-              <button class="container__listItem--btn">x</button>
-            </div>
-
-            <div class="container__listItem">
-              <div class="container__listItem--name subject">Sprawdzian</div>
-              <div class="container__listItem--grade">4.0</div>
-              <button class="container__listItem--btn">x</button>
-            </div>
-            <div class="container__listItem">
-              <div class="container__listItem--name subject">Odp. ustna</div>
-              <div class="container__listItem--grade">3.0</div>
-              <button class="container__listItem--btn">x</button>
-            </div>
-          </div>
     </section>
     <section class="schedule hidden">
 
@@ -96,10 +88,30 @@
 
   </main>
   <section class="form_semester hidden">
-    <div class="form_semester__box">
-        <input type="text" name="semester_name" id="semester_name" class="semester_input" placeholder="Semester name">
-        <button class="add_button">Dodaj</button>
-        <button class="close_button">x</button>
+    <div class="form_semester__box hidden" id="add-semester">
+      <input type="text" name="semester_name" id="semester_name" class="semester_input" placeholder="Semester name">
+      <button class="add_button">Dodaj</button>
+      <button class="close_button" id="close-semester-form-btn">x</button>
+    </div>
+
+    <div class="form_semester__box hidden" id="add-subject">
+      <div class="select-container">
+          <p class="select-title">Typ ocen: </p>
+          <select class="select-select">
+              <option value="arithmAvg" selected>Śr. arytmetyczna</option>
+              <option value="weightAvg">Śr. ważona</option>
+              <option value="points">Punkty</option>
+            </select>
+      </div>
+
+      <div id="weightedAvg" class="subject-form-inputs">
+        <input type="text" placeholder="Nazwa" class="form-input">
+        <input type="text" placeholder="Wartość" class="form-input ">
+        <input type="text" placeholder="Waga" class="form-input hidden" id="weight-input">
+      </div>
+
+      <button class="add_button">Dodaj</button>
+      <button class="close_button" id="close-subject-form-btn">x</button>
     </div>
 
   </section>
