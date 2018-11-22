@@ -29,7 +29,7 @@
       <div class="container__navigation semester_nav">
         <div class="flexContainer">
           <h2 class="semester-name" id="semester-name">Semestr 1</h2>
-
+          <input type="hidden" id="semester-id" value="">
         </div>
         <nav class="semester__nav">
           <ol class="semester__navigation">
@@ -105,14 +105,16 @@
       </div>
 
       <div id="weightedAvg" class="subject-form-inputs">
-        <input type="text" placeholder="Nazwa" class="form-input">
-        <input type="text" placeholder="Wartość" class="form-input ">
-        <input type="text" placeholder="Waga" class="form-input hidden" id="weight-input">
+        <input type="text" placeholder="Nazwa przedmiotu" class="form-input" id="subject-name-input">
       </div>
 
-      <button class="add_button">Dodaj</button>
+      <button class="add_button" id="subject-add-btn">Dodaj</button>
       <button class="close_button" id="close-subject-form-btn">x</button>
     </div>
+
+  </section>
+
+  <section class="form_semester hidden">
 
   </section>
   <script src="app.js"></script>

@@ -58,6 +58,25 @@ const gradeController = (function() {
       return data.semesters[id];
     },
 
+    addSubject(id, subject) {
+      let newSubject, semesterID;
+
+      semesterID = parseInt(id);
+
+      if(data.semesters[semesterID].subjects.length > 0) {
+
+        newSubjectID =  data.semesters[semesterID].subjects[data.semesters[semesterID].subjects.length - 1].id + 1;
+      } else {
+        newSubjectID = 0;
+      }
+
+      newSubject = new Subject(newSubjectID, subject.name, subject.type);
+
+      data.semesters[semesterID].subjects.push(newSubject);
+
+      return newSubject;
+    },
+
     test: function() {
       return data;
     }
@@ -82,11 +101,14 @@ const UIController = (function() {
     semesterList: '#semester_list',
     semesterDeleteBtn: '#semester_delete',
     semesterName: '#semester-name',
+    semesterID: '#semester-id',
     subjectsList: '#subjects-list',
     semesterCloseBtn: '#semester-close-btn',
     addSubjectBtn: '#addSubject',
     subjectSelect: '.select-select',
-    weightInput: '#weight-input'
+    weightInput: '#weight-input',
+    subjectName: '#subject-name-input',
+    subjectAddBtn: '#subject-add-btn'
   }
 
   return {
@@ -123,7 +145,9 @@ const UIController = (function() {
       document.querySelector(DOMstrings.main).classList.add('hidden');
 
       semesterName = DOMstrings.semesterName;
-      document.querySelector(semesterName).textContent = items.name
+      semesterID = DOMstrings.semesterID;
+      document.querySelector(semesterName).textContent = items.name;
+      document.querySelector(semesterID).value = items.id;
 
       for(let i = 0; i < items.subjects.length; i++) {
         html = '<div class="container__listItem"><div class="container__listItem--name">%subjectName%</div><button class="container__listItem--btn" id="semester_delete">x</button></div>';
@@ -142,7 +166,26 @@ const UIController = (function() {
 
       document.querySelector(DOMstrings.semester).classList.add('hidden');
       document.querySelector(DOMstrings.main).classList.remove('hidden');
-    }
+    },
+
+    getValueFromSubjectInputs: function() {
+      return {
+        name: document.querySelector(DOMstrings.subjectName).value,
+        type: document.querySelector(DOMstrings.subjectSelect).value,
+        semesterID: document.querySelector(DOMstrings.semesterID).value
+      }
+    },
+
+    addSubjectToList: function(item) {
+      let html, newHtml, htmlContainer;
+
+      html = '<div class="container__listItem" id="subject_id-%subjectID%"><div class="container__listItem--name">%subjectName%</div><button class="container__listItem--btn" id="semester_delete" ><i class="ion-ios-close-outline"></i></button></div>';
+      newHtml = html.replace('%subjectName%', item.name);
+      newHtml = newHtml.replace('%subjectID%', item.id);
+      htmlContainer = DOMstrings.subjectsList;
+
+      document.querySelector(htmlContainer).insertAdjacentHTML('beforeend', newHtml);
+    },
   }
 })();
 
@@ -209,21 +252,13 @@ const controller = (function(gradeCtrl, UICtrl) {
           document.querySelector(DOM.SubjectForm).classList.add('hidden');
         });
 
-        // Zmiana typu przedmiotu
-        document.querySelector(DOM.subjectSelect).addEventListener('change', function(e) {
-          let selectValue, weightInput;
-
-          selectValue = e.target.value;
-          weightInput = document.querySelector(DOM.weightInput);
-
-          if(selectValue === 'weightAvg') {
-            weightInput.classList.remove('hidden');
-          } else {
-            if(!weightInput.classList.contains('hidden')) {
-              weightInput.classList.add('hidden');
-            }
-          }
+        document.querySelector(DOM.subjectAddBtn).addEventListener('click', function() {
+          addSubject();
+          document.querySelector(DOM.FormSemester).classList.add('hidden');
         });
+
+
+
 
 
   };
@@ -264,15 +299,19 @@ const controller = (function(gradeCtrl, UICtrl) {
   };
 
   let addSubject = function() {
-    let inputs
+    let inputs, semesterID;
     // 1. Pobranie zawartosci z inputow
-    inputs = UI.getValueFromSubjectInputs();
+    inputs = UICtrl.getValueFromSubjectInputs();
 
     // 2. Walidacja i dodanie do struktury danych nowego przedmiotu
+    if (inputs.name !== "") {
+      newSubject = gradeCtrl.addSubject(parseInt(inputs.semesterID), inputs);
+    }
 
     // 3. Usunięcie zawartości z inputa
 
     // 4. Dodanie zawartości do widoku
+    UICtrl.addSubjectToList(newSubject);
   };
 
   return {
