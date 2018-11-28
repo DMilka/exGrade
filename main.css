@@ -289,8 +289,89 @@ height: 150px;
   height: 30px;
   font-size: 1.2rem;
   color: #231F20;
+  outline: 0;
 }
 
 .hidden {
   display: none;
+}
+
+.grade-container {
+  margin: 35px 0;
+}
+
+.form-input-small {
+  width: 30%;
+}
+
+.select-box {
+  height: 60px;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+}
+
+.grade-value-box {
+  display: flex;
+  flex-direction: row;
+}
+
+.form-button {
+  position: relative;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  font-size: 1.4rem;
+  border: 0;
+  background: 0;
+  border: 1px solid #231F20;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 125%;
+  outline: 0;
+  transition: all 0.4s;
+
+}
+
+.form-button:hover {
+  transform: translateY(2px);
+  cursor: pointer;
+}
+
+.disappearEffect {
+  animation-name: disappearEffect;
+  -webkit-animation-name: disappearEffect;
+  animation-duration: 0.2s;
+  -webkit-animation-duration:0.2s;
+  animation-iteration-count: 1;
+  -webkit-animation-iteration-count: 1;
+  animation-timing-function: ease;
+  -webkit-animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+
+}
+
+@keyframes disappearEffect {
+  from {
+    -webkit-transform: translateX(0px);
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: translateX(100px);
+    opacity: 0;
+  }
+}
+
+.grade-value-select {
+  border: 0;
+  background: 0;
+  border-bottom: 1px solid #231F20;
+  position: relative;
+  top: -15px;
+  left: -10px;
+  width: 70px;
+  height: 50px;
+  font-size: 1.2rem;
+  outline: 0;
 }

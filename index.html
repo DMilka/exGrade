@@ -28,7 +28,7 @@
     <section class="semester hidden">
       <div class="container__navigation semester_nav">
         <div class="flexContainer">
-          <h2 class="semester-name" id="semester-name">Semestr 1</h2>
+          <h2 class="semester-name" id="semester-name"></h2>
           <input type="hidden" id="semester-id" value="">
         </div>
         <nav class="semester__nav">
@@ -45,14 +45,16 @@
           +
       </button>
       <div class="container__list semester__list" id="subjects-list">
-
       </div>
     </section>
+
+    <!-- Subject detail -->
     <section class="subject hidden">
       <div class="container__navigation semester_nav">
         <div class="flexContainer">-
-          <h2 class="semester-name" id="subject-name">Semestr 1</h2>
-
+          <h2 class="semester-name" id="subject-name-title"></h2>
+          <input type="hidden" id="subject-id" value="">
+          <input type="hidden" id="subject-type" value="">
         </div>
         <nav class="semester__nav">
           <ol class="semester__navigation">
@@ -61,24 +63,14 @@
           </ol>
         </nav>
       </div>
-      <button class="container__navigation--btn moved-button">+</button>
-      <div class="container__list semester__list">
-        <div class="container__listItem">
-          <div class="container__listItem--name subject">Kartkówka</div>
-          <div class="container__listItem--grade">4.5</div>
-          <button class="container__listItem--btn">x</button>
-        </div>
+      <button class="container__navigation--btn back" id="subject-close-btn">
+        <-
+      </button>
+      <button class="container__navigation--btn moved-button" id="grade-form-show-btn">
+        +
+      </button>
+      <div class="container__list semester__list" id="grade-list">
 
-        <div class="container__listItem">
-          <div class="container__listItem--name subject">Sprawdzian</div>
-          <div class="container__listItem--grade">4.0</div>
-          <button class="container__listItem--btn">x</button>
-        </div>
-        <div class="container__listItem">
-          <div class="container__listItem--name subject">Odp. ustna</div>
-          <div class="container__listItem--grade">3.0</div>
-          <button class="container__listItem--btn">x</button>
-        </div>
       </div>
     </section>
     <section class="schedule hidden">
@@ -88,12 +80,18 @@
 
   </main>
   <section class="form_semester hidden">
+    <!----------------
+      Semester box
+    ------------------>
     <div class="form_semester__box hidden" id="add-semester">
       <input type="text" name="semester_name" id="semester_name" class="semester_input" placeholder="Semester name">
-      <button class="add_button">Dodaj</button>
+      <button class="add_button" id="grade-form">Dodaj</button>
       <button class="close_button" id="close-semester-form-btn">x</button>
     </div>
 
+    <!----------------
+      Subject box
+    ------------------>
     <div class="form_semester__box hidden" id="add-subject">
       <div class="select-container">
           <p class="select-title">Typ ocen: </p>
@@ -112,11 +110,44 @@
       <button class="close_button" id="close-subject-form-btn">x</button>
     </div>
 
+    <!----------------
+      Grade box
+    ------------------>
+    <div class="form_semester__box hidden" id="add-grade">
+      <div class="grade-container">
+          <input type="text" name="grade-name" id="grade-name" class="form-input" placeholder="Tytuł">
+          <div class="grade-value-box">
+            <input type="text" name="grade-value" id="grade-value" class="form-input form-input-small" placeholder="Wartość oceny">
+            <div class="select-box">
+              <button class="form-button" id="grade-add-value-btn">
+                  +
+              </button>
+              <select name="" id="grade-value-select" class="grade-value-select hidden">
+                <option value="6.0">6.0</option>
+                <option value="5.5">5.5</option>
+                <option value="5.0">5.0</option>
+                <option value="4.5">4.5</option>
+                <option value="4.0">4.0</option>
+                <option value="3.5">3.5</option>
+                <option value="3.0">3.0</option>
+                <option value="2.5">2.5</option>
+                <option value="2.0">2.0</option>
+                <option value="1.5">1.5</option>
+                <option value="1.0">1.0</option>
+              </select>
+            </div>
+
+          </div>
+
+          <input type="text" name="grade-weight" id="grade-weight" class="form-input" placeholder="Waga oceny">
+      </div>
+
+      <button class="add_button" id="add-grade-btn">Dodaj</button>
+      <button class="close_button" id="close-grade-form-btn">x</button>
+    </div>
   </section>
 
-  <section class="form_semester hidden">
 
-  </section>
   <script src="app.js"></script>
 </body>
 
