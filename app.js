@@ -5,8 +5,9 @@ const gradeController = (function() {
     this.subjects = [];
   };
 
-  let Subject = function(id, name, type) {
+  let Subject = function(id,semesterID ,name, type) {
     this.id = id;
+    this.semesterID = semesterID
     this.name = name;
     this.type = type;
     this.grades = [];
@@ -66,8 +67,6 @@ const gradeController = (function() {
       let newSubject, semesterID, arrayItem;
 
       semesterID = parseInt(id);
-      console.log(semesterID);
-
 
       for(let i = 0; i < data.semesters.length; i++) {
         if(data.semesters[i]['id'] === semesterID) {
@@ -82,7 +81,7 @@ const gradeController = (function() {
       }
 
 
-      newSubject = new Subject(newSubjectID, subject.name, subject.type);
+      newSubject = new Subject(newSubjectID, semesterID ,subject.name, subject.type);
 
       data.semesters[arrayItem].subjects.push(newSubject);
 
@@ -112,7 +111,6 @@ const gradeController = (function() {
         if(data.semesters[i]['id'] === semID) {
           for(let j = 0; j < data.semesters[i].subjects.length; j++) {
             if(data.semesters[i].subjects[j]['id'] === subID) {
-              console.log(data.semesters[i].subjects[j]);
               return data.semesters[i].subjects[j];
             }
           }
@@ -120,11 +118,24 @@ const gradeController = (function() {
       }
     },
 
-    // addGrade: function(subjectID, grade) {
-    //   let newGrade, gradeID;
+    addGradeToData: function(semesterID, subjectID, grade) {
 
-    //   if(data.semesters)
-    // },
+      if(data.semesters[semesterID].subjects[subjectID].grades.length > 0) {
+        newGradeID =  data.semesters[semesterID].subjects[subjectID].grades[data.semesters[semesterID].subjects[subjectID].grades.length].id + 1;
+      } else {
+        newGradeID = 0;
+      }
+
+      let newGrade = new Grade(newGradeID, grade.name, grade.value, grade.weightValue);
+
+      data.semesters[semesterID].subjects[subjectID].grades.push(newGrade);
+
+      return newGrade;
+    },
+
+    deleteGrade: function(e) {
+      console.log()
+    },
 
     test: function() {
       return data;
@@ -151,6 +162,7 @@ const UIController = (function() {
     semesterDeleteBtn: '#semester_delete',
     semesterName: '#semester-name',
     semesterID: '#semester-id',
+    subjectSemesterID: '#subject_semester-id',
     subjectNameTitle: '#subject-name-title',
     subjectID: '#subject-id',
     subjectsList: '#subjects-list',
@@ -172,7 +184,8 @@ const UIController = (function() {
     gradeFormBtn: '#grade-form-show-btn',
     gradeFormCloseBtn: '#close-grade-form-btn',
     gradeForm: '#add-grade',
-    gradeList: '#grade-list'
+    gradeList: '#grade-list',
+    gradeDeleteBtn: '#grade-delete-btn'
   }
 
   return {
@@ -288,11 +301,11 @@ const UIController = (function() {
       document.querySelector(DOMstrings.gradeValue).value = gradeValue;
     },
 
-    getInputsValueFromGradeForm: function() {
+    getSemSubData: function() {
       return {
-        name: document.querySelector(DOMstrings.gradeName).value,
-        value: parseInt(document.querySelector(DOMstrings.gradeValue).value),
-        weight: parseInt(document.querySelector(DOMstrings.gradeWeight).value)
+        semesterID: parseInt(document.querySelector(DOMstrings.subjectSemesterID).value),
+        subjectID: parseInt(document.querySelector(DOMstrings.subjectID).value),
+        type: document.querySelector(DOMstrings.subjectType).textContent
       }
     },
 
@@ -304,13 +317,15 @@ const UIController = (function() {
 
       document.querySelector(DOMstrings.subjectNameTitle).textContent = subject.name;
       document.querySelector(DOMstrings.subjectID).value = subject.id;
-      document.querySelector(DOMstrings.subjectType).value = subject.type;
+      document.querySelector(DOMstrings.subjectSemesterID).value = subject.semesterID;
+      document.querySelector(DOMstrings.subjectType).textContent = subject.type;
 
-      html = '<div class="container__listItem"><div class="container__listItem--name subject">%gradeName%</div><div class="container__listItem--grade">%gradeValue%</div><button class="container__listItem--btn">x</button></div>';
+      html = '<div class="container__listItem" id="grade_id-%gradeID%"><div class="container__listItem--name subject">%gradeName%</div><div class="container__listItem--grade">%gradeValue%</div><button class="container__listItem--btn" id="grade-delete-btn"><i class="ion-ios-close-outline"></i></button></div>';
       for(let i = 0; i < subject.grades.length; i++) {
         newHtml = html.replace('%gradeName%', subject.grades[i]['name']);
+        newHtml = newHtml.replace('%gradeID%', subject.grades[i]['id'])
         newHtml = newHtml.replace('%gradeValue%', subject.grades[i]['value']);
-        document.querySelector(DOM.gradesList).insertAdjacentHTML('beforeend', newHtml);
+        document.querySelector(DOMstrings.gradeList).insertAdjacentHTML('beforeend', newHtml);
       }
     },
 
@@ -329,6 +344,59 @@ const UIController = (function() {
     closeGradeForm: function() {
       document.querySelector(DOMstrings.gradeForm).classList.add('hidden');
       document.querySelector(DOMstrings.FormSemester).classList.add('hidden');
+
+      document.querySelector(DOMstrings.gradeName).value = "",
+      document.querySelector(DOMstrings.gradeValue).value = "",
+      document.querySelector(DOMstrings.gradeWeight).value = ""
+      document.querySelector(DOMstrings.gradeWeight).classList.remove("hidden");
+      document.querySelector(DOMstrings.gradeValueSelect).classList.add("hidden");
+      document.querySelector(DOMstrings.gradeAddValueBtn).classList.remove("disappearEffect");
+    },
+
+    getInputsValueFromGradeForm: function () {
+      let inputsValue, validateOK = 0, semSubID;
+      semSubID = this.getSemSubData();
+
+      inputsValue = {
+        name: document.querySelector(DOMstrings.gradeName).value,
+        value: parseFloat(document.querySelector(DOMstrings.gradeValue).value),
+        weight: parseFloat(document.querySelector(DOMstrings.gradeWeight).value),
+        semesterID: parseInt(semSubID.semesterID),
+        subjectID: parseInt(semSubID.subjectID)
+      }
+
+      if(semSubID.type === 'weightAvg') {
+        if(inputsValue.name != "" && inputsValue.value != "" && (!isNaN(inputsValue.value)) && (!isNaN(inputsValue.weight))) {
+          validateOK = 1;
+        }
+      } else {
+        if(inputsValue.name != "" && inputsValue.value != "" && (!isNaN(inputsValue.value))) {
+          validateOK = 1;
+        }
+
+      }
+
+      if(validateOK === 1) {
+        this.closeGradeForm();
+
+        return inputsValue;
+      }
+    },
+
+    showGradesInUI: function(grade) {
+
+    },
+
+    addGradeToUI: function(grade) {
+      let html, newHtml;
+
+      html = '<div class="container__listItem" id="grade_id-%gradeID%"><div class="container__listItem--name subject">%gradeName%</div><div class="container__listItem--grade">%gradeValue%</div><button class="container__listItem--btn" id="grade-delete-btn"><i class="ion-ios-close-outline"></i></button></div>';
+
+      newHtml = html.replace('%gradeName%', grade.name);
+      newHtml = newHtml.replace('%gradeID%', grade.id);
+      newHtml = newHtml.replace('%gradeValue%', grade.value);
+      document.querySelector(DOMstrings.gradeList).insertAdjacentHTML('beforeend', newHtml);
+
     }
 
 
@@ -421,7 +489,6 @@ const controller = (function(gradeCtrl, UICtrl) {
           dividedItem = item.split('-');
           dividedID = dividedItem[1];
 
-
           if(!isNaN(dividedID)) {
             // 1. Pobranie danych przedmiotu
             subject = gradeCtrl.getSubject(dividedID, semesterID);
@@ -435,7 +502,7 @@ const controller = (function(gradeCtrl, UICtrl) {
         document.querySelector(DOM.gradeFormBtn).addEventListener('click', function() {
           let subjectType;
 
-          subjectType = document.querySelector(DOM.subjectType).value;
+          subjectType = document.querySelector(DOM.subjectType).textContent;
 
           if(subjectType !== 'weightAvg') {
             document.querySelector(DOM.gradeWeight).classList.add('hidden');
@@ -457,6 +524,9 @@ const controller = (function(gradeCtrl, UICtrl) {
 
         // Zamkniecie formularza dodawania ocen
         document.querySelector(DOM.gradeFormCloseBtn).addEventListener('click', UICtrl.closeGradeForm);
+
+        // Usunięcie oceny
+        document.querySelector(DOM.gradeList).addEventListener('click', deleteGrade);
   };
 
   let addSemester = function() {
@@ -502,6 +572,7 @@ const controller = (function(gradeCtrl, UICtrl) {
       newSubject = gradeCtrl.addSubject(parseInt(inputs.semesterID), inputs);
     }
 
+
     // 3. Dodanie zawartości do widoku
     UICtrl.addSubjectToList(newSubject);
   };
@@ -535,13 +606,20 @@ const controller = (function(gradeCtrl, UICtrl) {
     // 1. Pobranie wartości z inputów, sprawdzenie ich oraz wyczyszczenie jeśli są poprawne
     grade = UICtrl.getInputsValueFromGradeForm();
 
-    if(grade.name != "" && grade.value != "" && (!isNaN(grade.value))) {
-      // 2. Dodanie do struktury danych wartości
-      gradeCtrl.addGradeToData();
+    // 2. Dodanie danych do struktury
+    newGrade = gradeCtrl.addGradeToData(grade.semesterID, grade.subjectID, grade);
 
-      // 3. Dodanie do widoku ocen
-    }
+    // 3. Dodanie do widoku ocen
+    UICtrl.addGradeToUI(newGrade);
 
+  }
+
+  let deleteGrade = function(e) {
+    console.log("XD");
+    let itemToDelete;
+
+    itemToDelete = e.target.parentNode.parentNode.id;
+    console.log(itemToDelete);
   }
 
   return {
