@@ -123,9 +123,6 @@ main {
 .container__listItem:hover .container__listItem--btn {
   display: block;
 }
-.hidden {
-  display: none;
-}
 
 .semester_nav {
   display: flex;
@@ -198,10 +195,10 @@ height: 150px;
 
 .form_semester__box {
   width: 500px;
-  height: 200px;
   margin: calc(50vh - 250px) calc(50vw - 250px);
   background-color: #FAF0CA;
   position: absolute;
+  padding: 15px 0;
 }
 
 .semester_input {
@@ -252,4 +249,134 @@ height: 150px;
 
 .close_button:hover {
   transform: translateY(3px);
+}
+
+.select-title {
+  font-size: 1.4rem;
+  font-family: 'Lato', sans-serif;
+}
+
+.select-container {
+  margin: 20px 10%;
+  height: 50px;
+  border-bottom: 1px solid #231F20;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.select-select {
+  height: 30px;
+  width: 200px;
+  font-size: 1.2rem;
+  background: 0;
+  border: 0;
+  border-bottom: 1px solid #231F20;
+  outline: 0;
+}
+
+.subject-form-inputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-input {
+  border: 0;
+  background: 0;
+  border-bottom: 1px solid #231F20;
+  width: 70%;
+  margin: 10px 15%;
+  height: 30px;
+  font-size: 1.2rem;
+  color: #231F20;
+  outline: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.grade-container {
+  margin: 35px 0;
+}
+
+.form-input-small {
+  width: 30%;
+}
+
+.select-box {
+  height: 60px;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+}
+
+.grade-value-box {
+  display: flex;
+  flex-direction: row;
+}
+
+.form-button {
+  position: relative;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  font-size: 1.4rem;
+  border: 0;
+  background: 0;
+  border: 1px solid #231F20;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 125%;
+  outline: 0;
+  transition: all 0.4s;
+
+}
+
+.form-button:hover {
+  transform: translateY(2px);
+  cursor: pointer;
+}
+
+.disappearEffect {
+  animation-name: disappearEffect;
+  -webkit-animation-name: disappearEffect;
+  animation-duration: 0.2s;
+  -webkit-animation-duration:0.2s;
+  animation-iteration-count: 1;
+  -webkit-animation-iteration-count: 1;
+  animation-timing-function: ease;
+  -webkit-animation-timing-function: ease;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+
+}
+
+@keyframes disappearEffect {
+  from {
+    -webkit-transform: translateX(0px);
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: translateX(100px);
+    opacity: 0;
+  }
+}
+
+.grade-value-select {
+  border: 0;
+  background: 0;
+  border-bottom: 1px solid #231F20;
+  position: relative;
+  top: -15px;
+  left: -10px;
+  width: 70px;
+  height: 50px;
+  font-size: 1.2rem;
+  outline: 0;
+}
+
+#subject-average {
+  position: relative;
+  left: 300px;
 }
