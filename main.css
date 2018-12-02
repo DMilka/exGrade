@@ -375,3 +375,8 @@ height: 150px;
   font-size: 1.2rem;
   outline: 0;
 }
+
+#subject-average {
+  position: relative;
+  left: 300px;
+}

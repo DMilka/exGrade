@@ -8,9 +8,33 @@ const gradeController = (function() {
   let Subject = function(id,semesterID ,name, type) {
     this.id = id;
     this.semesterID = semesterID
+    this.subjectAverage = 0;
     this.name = name;
     this.type = type;
     this.grades = [];
+  };
+
+  Subject.prototype.calcAverage = function() {
+    if(this.type === 'points') {
+      for(let i = 0; i < this.grades.length; i++) {
+        this.subjectAverage += this.grades[i].value;
+      }
+    } else if(this.type === 'arithmAvg') {
+      let sum = 0;
+      for(let i = 0; i < this.grades.length; i++) {
+        sum += this.grades[i].value;
+      }
+
+      this.subjectAverage = sum / this.grades.length;
+    } else if (this.type === 'weightAvg') {
+      let nominator = 0, denominator = 0;
+      for(let i = 0; i < this.grades.length; i++) {
+        nominator += this.grades[i].value * this.grades[i].weightValue;
+        denominator += this.grades[i].weightValue;
+      }
+
+      this.subjectAverage = parseFloat((nominator / denominator).toFixed(2));
+    }
   };
 
   let Grade = function(id, name, value, weightValue) {
@@ -121,21 +145,64 @@ const gradeController = (function() {
     addGradeToData: function(semesterID, subjectID, grade) {
 
       if(data.semesters[semesterID].subjects[subjectID].grades.length > 0) {
-        newGradeID =  data.semesters[semesterID].subjects[subjectID].grades[data.semesters[semesterID].subjects[subjectID].grades.length].id + 1;
+        newGradeID =  data.semesters[semesterID].subjects[subjectID].grades[data.semesters[semesterID].subjects[subjectID].grades.length - 1].id + 1;
       } else {
         newGradeID = 0;
       }
 
-      let newGrade = new Grade(newGradeID, grade.name, grade.value, grade.weightValue);
+
+      let newGrade = new Grade(newGradeID, grade.name, grade.value, grade.weight);
 
       data.semesters[semesterID].subjects[subjectID].grades.push(newGrade);
+
+      data.semesters[semesterID].subjects[subjectID].calcAverage();
 
       return newGrade;
     },
 
-    deleteGrade: function(e) {
-      console.log()
+    deleteGrade: function(semesterID, subjectID, gradeID) {
+      let indx, copyOfDataArr;
+
+      copyOfDataArr = data.semesters[semesterID].subjects[subjectID].grades.map(function(current) {
+        return current.id;
+      });
+
+      indx = copyOfDataArr.indexOf(gradeID);
+
+      if (indx !== -1) {
+        data.semesters[semesterID].subjects[subjectID].grades.splice(indx, 1);
+      }
+
+      data.semesters[semesterID].subjects[subjectID].calcAverage();
     },
+
+    showSubjectAverage: function(semesterID, subjectID) {
+
+      for(let i = 0; i < data.semesters.length; i++) {
+        if(data.semesters[i]['id'] === semesterID) {
+          for(let j = 0; j  < data.semesters[i].subjects.length; j++ ) {
+            if(data.semesters[i].subjects[j]['id'] === subjectID) {
+              return data.semesters[i].subjects[j].subjectAverage;
+            }
+          }
+        }
+      }
+
+    },
+
+    getSubjectsAverage: function() {
+      let averages = [];
+
+      for(let i = 0; i < data.semesters.length; i++) {
+        for(let j = 0; j  < data.semesters[i].subjects.length; j++ ) {
+            averages.push(data.semesters[i].subjects[j].subjectAverage);
+        }
+      }
+
+      return averages;
+    },
+
+
 
     test: function() {
       return data;
@@ -163,7 +230,8 @@ const UIController = (function() {
     semesterName: '#semester-name',
     semesterID: '#semester-id',
     subjectSemesterID: '#subject_semester-id',
-    subjectNameTitle: '#subject-name-title',
+    subjectNameTitle: '#subject-title',
+    subjectAverage: '#subject-average',
     subjectID: '#subject-id',
     subjectsList: '#subjects-list',
     semesterCloseBtn: '#semester-close-btn',
@@ -221,6 +289,7 @@ const UIController = (function() {
     showSemesterInUI: function(items) {
       let semesterName, html, newHtml;
 
+      console.log(items);
       document.querySelector(DOMstrings.semester).classList.remove('hidden');
       document.querySelector(DOMstrings.main).classList.add('hidden');
 
@@ -230,9 +299,14 @@ const UIController = (function() {
       document.querySelector(semesterID).value = items.id;
 
       for(let i = 0; i < items.subjects.length; i++) {
-        html = '<div class="container__listItem" id="subject_id-%subjectID%"><div class="container__listItem--name">%subjectName%</div><button class="container__listItem--btn" id="semester_delete"><i class="ion-ios-close-outline"></i></button></div>';
+        html = '<div class="container__listItem" id="subject_id-%subjectID%"><div class="container__listItem--name">%subjectName%</div><div class="container__listItem--grade">%gradeAverage%</div><button class="container__listItem--btn" id="semester_delete"><i class="ion-ios-close-outline"></i></button></div>';
         newHtml = html.replace('%subjectName%', items.subjects[i]['name']);
         newHtml = newHtml.replace('%subjectID%', items.subjects[i]['id']);
+        if(items.subjects[i]['subjectAverage'] > 0) {
+          newHtml = newHtml.replace('%gradeAverage%', items.subjects[i]['subjectAverage']);
+        } else {
+          newHtml = newHtml.replace('%gradeAverage%', "");
+        }
         document.querySelector(DOMstrings.subjectsList).insertAdjacentHTML('beforeend', newHtml);
       }
     },
@@ -267,10 +341,12 @@ const UIController = (function() {
     addSubjectToList: function(item) {
       let html, newHtml, htmlContainer;
 
-      html = '<div class="container__listItem" id="subject_id-%subjectID%"><div class="container__listItem--name">%subjectName%</div><button class="container__listItem--btn" id="semester_delete" ><i class="ion-ios-close-outline"></i></button></div>';
+      html = '<div class="container__listItem" id="subject_id-%subjectID%"><div class="container__listItem--name">%subjectName%</div><div class="container__listItem--grade">%gradeAverage%</div><button class="container__listItem--btn" id="semester_delete" ><i class="ion-ios-close-outline"></i></button></div>';
       newHtml = html.replace('%subjectName%', item.name);
       newHtml = newHtml.replace('%subjectID%', item.id);
+      newHtml = newHtml.replace('%gradeAverage%', "");
       htmlContainer = DOMstrings.subjectsList;
+
 
       document.querySelector(htmlContainer).insertAdjacentHTML('beforeend', newHtml);
     },
@@ -320,25 +396,46 @@ const UIController = (function() {
       document.querySelector(DOMstrings.subjectSemesterID).value = subject.semesterID;
       document.querySelector(DOMstrings.subjectType).textContent = subject.type;
 
-      html = '<div class="container__listItem" id="grade_id-%gradeID%"><div class="container__listItem--name subject">%gradeName%</div><div class="container__listItem--grade">%gradeValue%</div><button class="container__listItem--btn" id="grade-delete-btn"><i class="ion-ios-close-outline"></i></button></div>';
+
+      if(subject.subjectAverage > 0) {
+        document.querySelector(DOMstrings.subjectAverage).textContent = subject.subjectAverage;
+      } else {
+        document.querySelector(DOMstrings.subjectAverage).textContent = "";
+      }
+
+      html = '<div class="container__listItem" id="grade_id-%gradeID%"><div class="container__listItem--name subject">%gradeName%</div><div class="container__listItem--grade">%gradeAverage%</div><button class="container__listItem--btn" id="grade-delete-btn"><i class="ion-ios-close-outline"></i></button></div>';
       for(let i = 0; i < subject.grades.length; i++) {
         newHtml = html.replace('%gradeName%', subject.grades[i]['name']);
-        newHtml = newHtml.replace('%gradeID%', subject.grades[i]['id'])
+        newHtml = newHtml.replace('%gradeID%', subject.grades[i]['id']);
+        if(subject.grades[i]['value'] !== undefined) {
+          newHtml = newHtml.replace('%gradeAverage%', subject.grades[i]['value']);
+        } else {
+          newHtml = newHtml.replace('%gradeAverage%', "");
+        }
         newHtml = newHtml.replace('%gradeValue%', subject.grades[i]['value']);
         document.querySelector(DOMstrings.gradeList).insertAdjacentHTML('beforeend', newHtml);
       }
     },
 
-    closeSubjectInUI: function() {
-      let htmlToDestroy;
+    closeSubjectInUI: function(subjectsAverage) {
+      let htmlToDestroy, subjectList;
 
       htmlToDestroy = document.querySelector(DOMstrings.gradeList);
       while(htmlToDestroy.firstChild) {
         htmlToDestroy.removeChild(htmlToDestroy.firstChild);
       }
 
+      subjectList = document.querySelector(DOMstrings.subjectsList);
+
+      for(i = 0; i < subjectList.children.length; i++) {
+        if(subjectsAverage[i] > 0) subjectList.children[i].children[1].textContent = subjectsAverage[i];
+        
+      }
+
       document.querySelector(DOMstrings.subject).classList.add('hidden');
       document.querySelector(DOMstrings.semester).classList.remove('hidden');
+
+
     },
 
     closeGradeForm: function() {
@@ -354,13 +451,16 @@ const UIController = (function() {
     },
 
     getInputsValueFromGradeForm: function () {
-      let inputsValue, validateOK = 0, semSubID;
+      let inputsValue, validateOK = 0, semSubID, value, weightValue;
       semSubID = this.getSemSubData();
+
+      //value = document.querySelector(DOMstrings.gradeValue).value;
+
 
       inputsValue = {
         name: document.querySelector(DOMstrings.gradeName).value,
-        value: parseFloat(document.querySelector(DOMstrings.gradeValue).value),
-        weight: parseFloat(document.querySelector(DOMstrings.gradeWeight).value),
+        value: parseFloat(document.querySelector(DOMstrings.gradeValue).value.replace(',', '.')),
+        weight: parseFloat(document.querySelector(DOMstrings.gradeWeight).value.replace(',', '.')),
         semesterID: parseInt(semSubID.semesterID),
         subjectID: parseInt(semSubID.subjectID)
       }
@@ -383,10 +483,6 @@ const UIController = (function() {
       }
     },
 
-    showGradesInUI: function(grade) {
-
-    },
-
     addGradeToUI: function(grade) {
       let html, newHtml;
 
@@ -396,9 +492,12 @@ const UIController = (function() {
       newHtml = newHtml.replace('%gradeID%', grade.id);
       newHtml = newHtml.replace('%gradeValue%', grade.value);
       document.querySelector(DOMstrings.gradeList).insertAdjacentHTML('beforeend', newHtml);
+    },
 
-    }
-
+    deleteGrade: function(element) {
+      let el = document.getElementById(element);
+      el.parentNode.removeChild(el);
+    },
 
   }
 })();
@@ -517,16 +616,26 @@ const controller = (function(gradeCtrl, UICtrl) {
         document.querySelector(DOM.gradeValueSelect).addEventListener('change', UICtrl.changeGradeValue);
 
         // Pobranie oceny z formularza i zamknięcie go
-        document.querySelector(DOM.gradeAddBtn).addEventListener('click', addGrade);
+        document.querySelector(DOM.gradeAddBtn).addEventListener('click', function() {
+          addGrade(DOM.subjectAverage);
+        });
 
         // Powrot do listy semestrów
-        document.querySelector(DOM.subjectCloseBtn).addEventListener('click', UICtrl.closeSubjectInUI);
+        document.querySelector(DOM.subjectCloseBtn).addEventListener('click', function() {
+          let subjectsAverage;
+
+          subjectsAverage = gradeCtrl.getSubjectsAverage();
+
+          UICtrl.closeSubjectInUI(subjectsAverage);
+        });
 
         // Zamkniecie formularza dodawania ocen
         document.querySelector(DOM.gradeFormCloseBtn).addEventListener('click', UICtrl.closeGradeForm);
 
         // Usunięcie oceny
         document.querySelector(DOM.gradeList).addEventListener('click', deleteGrade);
+
+
   };
 
   let addSemester = function() {
@@ -584,7 +693,7 @@ const controller = (function(gradeCtrl, UICtrl) {
     dividedItem = itemToDeleteID.split('-');
     dividedID = parseInt(dividedItem[1]);
 
-    if(e.target.parentNode.parentNode.parentNode.parentNode.children[0].children[0].children[1].value) {
+    if(e.target.parentNode.parentNode.parentNode.parentNode.children[0].children[0].children[1] !== undefined) {
       semesterID = e.target.parentNode.parentNode.parentNode.parentNode.children[0].children[0].children[1].value;
     }
     semesterID = parseInt(semesterID);
@@ -601,7 +710,7 @@ const controller = (function(gradeCtrl, UICtrl) {
     }
   };
 
-  let addGrade = function() {
+  let addGrade = function(subjectGradeAverageTitle) {
     let grade;
     // 1. Pobranie wartości z inputów, sprawdzenie ich oraz wyczyszczenie jeśli są poprawne
     grade = UICtrl.getInputsValueFromGradeForm();
@@ -612,15 +721,39 @@ const controller = (function(gradeCtrl, UICtrl) {
     // 3. Dodanie do widoku ocen
     UICtrl.addGradeToUI(newGrade);
 
-  }
+    // 4. Dodanie sredniej do widoku
+    showSubjectAverage(gradeCtrl.showSubjectAverage(grade.semesterID, grade.subjectID), subjectGradeAverageTitle);
+
+  };
 
   let deleteGrade = function(e) {
-    console.log("XD");
-    let itemToDelete;
+    let itemToDelete, dividedItem, dividedID, semSubData;
 
+
+    // 1. Pobierz ID usuwanego przedmiotu
     itemToDelete = e.target.parentNode.parentNode.id;
-    console.log(itemToDelete);
+    dividedItem = itemToDelete.split('-');
+    dividedID = parseInt(dividedItem[1]);
+
+    // 2. Pobierz informacje o semestrze oraz przedmiocie
+    semSubData = UICtrl.getSemSubData();
+
+    if(itemToDelete !== 'grade-list') {
+    // 3. Usuń przedmiot ze struktury danych
+    gradeCtrl.deleteGrade(semSubData.semesterID, semSubData.subjectID, dividedID);
+
+    // 4. Usuń przedmiot z widoku
+    UICtrl.deleteGrade(itemToDelete);
+    }
+  };
+
+  let showSubjectAverage = function(subjectAverage, subjectTitle) {
+    let average;
+    average = subjectAverage;
+    document.querySelector(subjectTitle).textContent = average;
   }
+
+  // let generateAverageInSubjectList = function();
 
   return {
     init: function() {
